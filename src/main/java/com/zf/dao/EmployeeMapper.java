@@ -1,6 +1,7 @@
 package com.zf.dao;
 
 import com.zf.bean.Employee;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author zhengfan
@@ -12,4 +13,5 @@ public interface EmployeeMapper {
     public  void  addEmp(Employee employee);
     public  void updateEmp(Employee employee);
     public  boolean delEmp(Integer id);
+    Employee  getEmpByIdAndLastName(@Param("id") Integer id,@Param("lastName") String lastName);
 }

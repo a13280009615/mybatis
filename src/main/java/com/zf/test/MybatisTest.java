@@ -135,4 +135,25 @@ public class MybatisTest {
             session.close();
         }
     }
+
+
+
+
+    @Test
+    public  void test05() throws IOException {
+
+        //Parameter 'id' not found. Available parameters are [0, 1, param1, param2]
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+            Employee tom = mapper.getEmpByIdAndLastName(1, "tom");
+            System.out.println(tom);
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
 }

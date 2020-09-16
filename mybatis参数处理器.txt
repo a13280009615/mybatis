@@ -1,0 +1,27 @@
+mybatis 的参数处理
+ 单个参数 mybatis 不会做特殊处理 #{参数名} 取值
+    如果是Collection 类型或者数组 也会特殊处理 把传入的list 或者数组封装在map中
+    key： Collection（collection） 如果是list 还可以是使用list这个key
+    数组使用array
+
+ 多个参数 Parameter 'id' not found. Available parameters are [0, 1, param1, param2]
+   多个参数会封装成一个map
+     map中的key 就是param1 param2... 或者使用参数的索引取值 默认从0开始
+   #{} 就是从map中获取指定的key的值
+ 多个参数的时候 使用命名参数 (明确指定封装参数时map的key )  @param 注解
+
+ Employee  getEmpByIdAndLastName(@Param("id") Integer id,@Param("lastName") String lastName);
+
+   <select id="getEmpByIdAndLastName" resultType="com.zf.bean.Employee">
+         select * from   tbl_employee where  id= #{id} and last_name =#{lastName}
+   </select>
+
+pojo：
+ 如果多个参数正好是我们业务逻辑的数据模型 我们就可以直接传入pojo  #{属性名}
+
+map：
+ 如果多个参数不是我们的业务模型 不经常使用 没有对应的pojo 为了方便可以直接传入map
+
+ #{map中的key}
+
+ 如果多个参数经常使用并且不是业务模型  可以抽取一个 to  传输对象

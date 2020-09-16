@@ -12,15 +12,25 @@
     select * from tbl_employee where id = #{id}
   </select>
 
-<!--    mysql 支持自增主键 也是利用了 jdbc.getGeneratedKeys()方法
+    <!--    mysql 支持自增主键 也是利用了 jdbc.getGeneratedKeys()方法
  获取自增主键的值
 useGeneratedKeys="true"  使用自增主键 获取主键策略
 keyProperty 指定对应的主键属性 也就是mybatis 获取到主键值的时候 将这个值封装给 javabean的那个属性
--->
+  -->
+
+<!--  不支持自增主键的时候   -->
     <insert id="addEmp"  parameterType="employee" useGeneratedKeys="true" keyProperty="id">
         insert  into tbl_employee(last_name,email,gender)
         values (#{lastName},#{email},#{gender})
     </insert>
+
+
+<!--    <insert id="addEmp">-->
+<!--  keyProperty 查出的值将要封装到那个属性当中  order 属性指定 这个sql 在之前还是之后 resultType指定返回值的类型-->
+<!--       <selectKey  keyProperty="id"  order="BEFORE" resultType="Integer">-->
+<!--        编写查询 序列的sql语句-->
+<!--        </selectKey>-->
+<!--    </insert>-->
 
     <update id="updateEmp">
         update tbl_employee set last_name =#{lastName},email =#{email},gender =#{gender}
@@ -30,4 +40,8 @@ keyProperty 指定对应的主键属性 也就是mybatis 获取到主键值的�
     <delete id="delEmp">
         delete from tbl_employee  where id =#{id}
     </delete>
+
+    <select id="getEmpByIdAndLastName" resultType="com.zf.bean.Employee">
+        select * from   tbl_employee where  id= #{id} and last_name =#{lastName}
+    </select>
 </mapper>
