@@ -77,6 +77,7 @@ public class MybatisTest {
             System.out.println(emp);
         }finally {
             sqlSession.close();
+            System.out.println("sout");
         }
     }
 }
