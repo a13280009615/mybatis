@@ -13,6 +13,30 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
+
+    <!--   typeAliases 给 javabean 起别名    别名不区分大小写-->
+    <typeAliases>
+        <!--   type属性 指定那个类(全限定类名)  alias 指定别名  默认为类首字母小写 
+        <typeAlias type="com.zf.bean.Employee" alias="emp"></typeAlias>  -->
+
+        <!--     package标签可以批量指定别名  包含当前包 以及 子包 默认规则一样 类 首字母小写
+        如果多个类名相同 可以在 类名 使用@Alias("emp") 注解指定
+         -->
+        <package name="com.zf.bean"/>
+    </typeAliases>
+
+<!--   java类型  和 sql类型 数据匹配 -->
+    <typeHandlers></typeHandlers>
+<!--    配置环境 可以配置多种环境
+        每一个environment 配置一个具体的环境信息  都必须有 dataSource  和 transactionManager
+        id  当前环境的唯一标识
+        transactionManager type   默认两种 JDBC  MANAGED
+        自定义事务管理器 实现transactionFactory接口
+        dataSource type  默认三种 UNPOOLED  POOLED  JNDI
+         自定义需要实现DatasourceFactory接口
+  -->
+
+
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -24,7 +48,28 @@
             </dataSource>
         </environment>
     </environments>
+
+    <!--    该标签  支持多数据库厂商
+      type 的作用就是得到数据库厂商的标识
+  -->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+        <property name="SQL Server" value="sqlserver"/>
+    </databaseIdProvider>
+
+<!--  mapper
+  注册配置文件
+   resource  引入类路径下的资源文件
+   url 引入网络资源或者磁盘文件下sql映射文件
+   注册接口  前提(接口和配置文件 同名 同包)
+   class  引用接口
+  -->
+
+<!--    <package name=""></package>-->
     <mappers>
         <mapper resource="EmployeeMapper.xml"/>
     </mappers>
+
+
 </configuration>
