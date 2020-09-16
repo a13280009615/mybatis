@@ -29,5 +29,16 @@
         </dependency>
     </dependencies>
 
+<!-- IDEA maven项目默认不会把src下除java文件外的文件打包到classes文件夹下，需要在maven中增加配置如下  -->
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
 </project>

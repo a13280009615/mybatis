@@ -62,14 +62,18 @@
   注册配置文件
    resource  引入类路径下的资源文件
    url 引入网络资源或者磁盘文件下sql映射文件
-   注册接口  前提(接口和配置文件 同名 同包)
-   class  引用接口
-  -->
 
-<!--    <package name=""></package>-->
-    <mappers>
-        <mapper resource="EmployeeMapper.xml"/>
+   注册接口  前提(接口和配置文件 同名 同包)
+      class  引用接口
+       <mappers>
+        <mapper class="com.zf.dao.EmployeeMapper"/>
     </mappers>
 
+  package  批量注册  和接口类似 前提是 接口和配置文件同名同包
+  -->
+
+    <mappers>
+     <package name="com.zf.dao"/>
+    </mappers>
 
 </configuration>

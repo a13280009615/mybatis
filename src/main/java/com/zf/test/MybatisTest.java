@@ -77,7 +77,62 @@ public class MybatisTest {
             System.out.println(emp);
         }finally {
             sqlSession.close();
-            System.out.println("sout");
+        }
+    }
+
+
+    /**
+     *  测试简单的增删改
+     *   mybatis 的增删改 允许直接定义 以下返回值 Integer  Long  Boolean void 类型的返回值 自动封装
+     *
+     * @throws IOException
+     */
+
+    @Test
+    public  void test03() throws IOException {
+       SqlSessionFactory factory = getSqlSessionFactory();
+       //默认不会自动提交 如果想自动提交在方法中传一个 true
+      SqlSession  session = factory.openSession();
+
+      try{
+          EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+
+          //测试新增员工
+          //  Employee employee = new Employee(null, "kit", "1", "kit@163.com");
+          // mapper.addEmp(employee);
+
+          //测试更新员工信息
+          //Employee employee = new Employee(2, "jerry", "1", "jerry@163.com");
+          //mapper.updateEmp(employee);
+
+          //测试删除
+          boolean b = mapper.delEmp(2);
+          System.out.println(b);
+          session.commit();
+      }finally {
+          session.close();
+      }
+    }
+
+
+    @Test
+    public  void test04() throws IOException {
+        SqlSessionFactory factory = getSqlSessionFactory();
+        //默认不会自动提交 如果想自动提交在方法中传一个 true
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+
+            //测试新增员工
+              Employee employee = new Employee(null, "kit", "1", "kit@163.com");
+             mapper.addEmp(employee);
+            System.out.println(employee.getId());
+
+
+            session.commit();
+        }finally {
+            session.close();
         }
     }
 }
