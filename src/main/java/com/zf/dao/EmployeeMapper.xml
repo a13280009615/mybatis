@@ -32,6 +32,10 @@ keyProperty 指定对应的主键属性 也就是mybatis 获取到主键值的�
 <!--        </selectKey>-->
 <!--    </insert>-->
 
+    <select id="getByMap" resultType="com.zf.bean.Employee">
+         select * from   tbl_employee where  id= #{id} and last_name =#{lastName}
+    </select>
+
     <update id="updateEmp">
         update tbl_employee set last_name =#{lastName},email =#{email},gender =#{gender}
         where id = #{id}
@@ -43,5 +47,22 @@ keyProperty 指定对应的主键属性 也就是mybatis 获取到主键值的�
 
     <select id="getEmpByIdAndLastName" resultType="com.zf.bean.Employee">
         select * from   tbl_employee where  id= #{id} and last_name =#{lastName}
+    </select>
+
+<!--    返回的是一个集合  返回值是集合中元素的类型-->
+    <select id="getEmpByLastNameLike" resultType="com.zf.bean.Employee">
+
+    select * from  tbl_employee  where last_name like  #{lastName}
+    </select>
+
+
+    <select id="getEmployeeById" resultType="map">
+        select  * from  tbl_employee where id = #{id}
+    </select>
+
+
+
+    <select id="getEmpsByLastNameLike" resultType="com.zf.bean.Employee">
+        select * from  tbl_employee  where last_name like  #{lastName}
     </select>
 </mapper>

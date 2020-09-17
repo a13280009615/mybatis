@@ -25,3 +25,64 @@ map：
  #{map中的key}
 
  如果多个参数经常使用并且不是业务模型  可以抽取一个 to  传输对象
+
+ -------------mybatis将参数封装成map 的过程 getNamedParams()---------------
+
+ParamNamedResolver 具名参数解析器
+
+ 1. 拿到每个标了 Param注解参数 的值 如果没有标注注解 map中put 的key 是 paramIndex value 就是name的值
+  name的值标注了注解 就是注解指定的值
+         1.1如果没有先看全局配置是否配置 useActualParamName 属性  jdk 1.8以后默认为true  name=参数名
+         1.2name  =map.size() : 相当于当前元素的索引{0=id,1=lastName}
+
+
+
+ public Object getNamedParams(Object[] args) {
+     final int paramCount = names.size();
+     //参数为0  直接返回 null
+     if (args == null || paramCount == 0) {
+       return null;
+       //如果有一个参数 并且没有 Param 注解的  直接 返回 arg[0]  单个参数直接返回
+     } else if (!hasParamAnnotation && paramCount == 1) {
+       return args[names.firstKey()];
+     } else {
+     // 多个参数 或者有param 注解的参数
+       final Map<String, Object> param = new ParamMap<Object>();
+       int i = 0;
+
+       //遍历 names 集合
+       for (Map.Entry<Integer, String> entry : names.entrySet()) {
+       //names集合的value 作为 key   names集合key 作为取值的参考
+       //{id=arg[0]:1,lastName=arg[1]:tom}
+         param.put(entry.getValue(), args[entry.getKey()]);
+         // add generic param names (param1, param2, ...)
+         //额外的将每一个参数保存到map中 使用key：param1 param2...
+         final String genericParamName = GENERIC_NAME_PREFIX + String.valueOf(i + 1);
+         // ensure not to overwrite parameter named with @Param
+         if (!names.containsValue(genericParamName)) {
+           param.put(genericParamName, args[entry.getKey()]);
+         }
+         i++;
+       }
+       return param;
+     }
+   }
+
+
+   -------------mybatis 取值---------------
+   #{}  预编译  防止sql注入
+   ${}  不会预编译  取出的值 直接拼装在sql语句中 会有安全问题  一般用于 原声jdbc 不支持占位符的地方使用${}
+
+
+
+   #{} 更丰富的用法
+
+   jdbcType 通常需要在某种特定的情况下设置
+    在我们的数据为null的时候 有些数据库可能不识别 mybatis的null处理  比如 oracle
+
+    JdbcType Other 无效的类型 因为mybatis对所有的null 都映射的是原生Jdbc的Other类型 oracle 不能正确处理
+
+    #{email,JdbcType=Other}
+
+    或者在全局配置文件中
+    jdbcTypeForNull  value = NUll

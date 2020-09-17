@@ -10,9 +10,9 @@
     <properties  resource="db.properties"></properties>
 
 <!--    setting 用来设置每一项-->
-    <settings>
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
-    </settings>
+<!--    <settings>-->
+<!--        <setting name="mapUnderscoreToCamelCase" value="true"/>-->
+<!--    </settings>-->
 
     <!--   typeAliases 给 javabean 起别名    别名不区分大小写-->
     <typeAliases>

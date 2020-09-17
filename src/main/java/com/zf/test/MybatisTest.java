@@ -2,6 +2,7 @@ package com.zf.test;
 
 import com.zf.bean.Employee;
 import com.zf.dao.EmployeeMapper;
+import com.zf.dao.EmployeeMapperPlus;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -10,6 +11,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhengfan
@@ -151,6 +155,123 @@ public class MybatisTest {
             EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
             Employee tom = mapper.getEmpByIdAndLastName(1, "tom");
             System.out.println(tom);
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+    /**
+     *  通过 map 传值
+     * @throws IOException
+     */
+    @Test
+    public  void test06() throws IOException {
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+            Map<String,Object> map  =  new HashMap<>();
+            map.put("id",1);
+            map.put("lastName","tom");
+            Employee tom = mapper.getByMap(map);
+            System.out.println(tom);
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+    /**
+     * 返回值是一个集合的测试
+     * @throws IOException
+     */
+    @Test
+    public  void test08() throws IOException {
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+
+            List<Employee> employeeList = mapper.getEmpByLastNameLike("%i%");
+            for (Employee e:employeeList) {
+                System.out.println(e);
+            }
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+
+    @Test
+    public  void test09() throws IOException {
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+
+            Map<String, Object> employee = mapper.getEmployeeById(1);
+            System.out.println(employee);
+
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+
+    @Test
+    public  void test10() throws IOException {
+
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+
+            Map<Integer, Employee> emps = mapper.getEmpsByLastNameLike("%i%");
+
+            System.out.println(emps);
+
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+
+    @Test
+    public  void test11() throws IOException {
+
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapperPlus mapper = session.getMapper(EmployeeMapperPlus.class);
+
+            Employee emp = mapper.getEmpById(1);
+
+            System.out.println(emp);
+
             session.commit();
         }finally {
             session.close();

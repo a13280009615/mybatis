@@ -14,6 +14,15 @@ public class Employee {
 
     private  String email;
 
+    private  Department department;
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
     public Integer getId() {
         return id;
@@ -54,6 +63,7 @@ public class Employee {
                 ", lastName='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", email='" + email + '\'' +
+                ", department=" + department +
                 '}';
     }
 
