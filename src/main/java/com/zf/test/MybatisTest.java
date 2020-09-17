@@ -1,6 +1,8 @@
 package com.zf.test;
 
+import com.zf.bean.Department;
 import com.zf.bean.Employee;
+import com.zf.dao.DepartmentMapper;
 import com.zf.dao.EmployeeMapper;
 import com.zf.dao.EmployeeMapperPlus;
 import org.apache.ibatis.io.Resources;
@@ -271,6 +273,99 @@ public class MybatisTest {
             Employee emp = mapper.getEmpById(1);
 
             System.out.println(emp);
+
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+    /**
+     *  测试设置及联属性 查询
+     * @throws IOException
+     */
+    @Test
+    public  void test12() throws IOException {
+
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapperPlus mapper = session.getMapper(EmployeeMapperPlus.class);
+
+            Employee employee = mapper.getEmpAndDept(1);
+            System.out.println(employee);
+
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+
+    @Test
+    public  void test13() throws IOException {
+
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            EmployeeMapperPlus mapper = session.getMapper(EmployeeMapperPlus.class);
+
+            Employee employee = mapper.getEmpByIdStep(6);
+            System.out.println(employee);
+
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+
+    @Test
+    public  void test14() throws IOException {
+
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            DepartmentMapper mapper = session.getMapper(DepartmentMapper.class);
+
+            Department plus = mapper.getDeptByIdPlus(2);
+            System.out.println(plus);
+            System.out.println(plus.getEmps());
+
+            session.commit();
+        }finally {
+            session.close();
+        }
+    }
+
+
+
+    @Test
+    public  void test15() throws IOException {
+
+
+        SqlSessionFactory factory = getSqlSessionFactory();
+
+        SqlSession  session = factory.openSession();
+
+        try{
+            DepartmentMapper mapper = session.getMapper(DepartmentMapper.class);
+
+            Department plus = mapper.getDeptByIdStep(2);
+            System.out.println(plus);
+            System.out.println(plus.getEmps());
 
             session.commit();
         }finally {

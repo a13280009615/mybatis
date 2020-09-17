@@ -8,10 +8,10 @@
     
     <resultMap id="empMap" type="com.zf.bean.Employee">
 <!--        id  指定主键的封装规则
-   column 那一列   property 那个属性
+            属性  column 数据库的那一列  property 那个属性那个属性
  -->
         <id column="id" property="id"/>
-<!--        result 定义普通列-->
+<!--        result 定义普通列  属性和id 一样-->
         <result column="last_name" property="lastName"/>
         <result column="email" property="email"/>
         <result column="gender" property="gender"/>
@@ -21,9 +21,95 @@
          select * from tbl_employee where id = #{id}
     </select>
 
+    
+
+<!--    联合查询 使用及联属性-->
+    <resultMap id="diffEmp" type="com.zf.bean.Employee">
+     <id column="id" property="id"/>
+     <result column="last_name" property="lastName"/>
+    <result column="email" property="email"/>
+    <result column="gender" property="gender"/>
+    <result column="dept_id" property="department.id"/>
+    <result column="dept_name" property="department.departmentName"/>
+    </resultMap>
+
+<!-- 使用association 指定关联单个对象  property 指定那个属性是联合的对象
+javaType 指定联合查询对象的类型 全限定类名 不能省略的
+-->
+    <resultMap id="diffEmp2" type="com.zf.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+        <association property="department"  javaType="com.zf.bean.Department">
+          <id column="d_id" property="id" />
+          <result column="dept_name" property="departmentName"/>
+        </association>
+    </resultMap>
+
+<!--    使用 association 进行分步查询-->
 
 
-    <select id="getEmpAndDept">
-
+    <select id="getEmpAndDept"  resultMap="diffEmp2">
+        SELECT e.id,e.last_name,e.gender,e.email,e.d_id,d.id dept_id,d.dept_name
+        FROM tbl_employee  e LEFT JOIN tbl_dept d
+        ON e.d_id = d.id
+        where  e.id =#{id}
     </select>
+
+<!-- 先按照员工id 查询员工信息
+    根据查询员工的信息中的 部门id 查询出部门信息
+    部门信息设置到员工信息中
+-->
+    <resultMap id="stepById" type="com.zf.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+<!--        association 定义关联对象的封装规则
+     select 表明当前属性是调用select指定的方法查出的结果
+     流程 使用select 指定的方法 传入 column指定的这个参数的值 并封装给property指定的属性
+-->
+        <association property="department"
+                     select="com.zf.dao.DepartmentMapper.getDeptById" column="d_id"></association>
+    </resultMap>
+    <select id="getEmpByIdStep" resultMap="disEmp">
+        select * from  tbl_employee where  id =#{id}
+    </select>
+
+
+    <select id="getEmpByDeptId" resultType="com.zf.bean.Employee">
+         select * from  tbl_employee where  d_id =#{id}
+    </select>
+
+
+
+
+
+    <resultMap id="disEmp" type="com.zf.bean.Employee">
+        <id column="id" property="id"/>
+        <result column="last_name" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="gender" property="gender"/>
+        <!--  discriminator 鉴别器  可以判断某列的值，然后根据某列的值改变封装行为
+             如果是女生 就部门信息查询出来
+             如果是男生 把lastName 这一列的值复制给 email
+
+             column 指定判断的列名
+             javaType 就是判断的列名的java 类型
+             -->
+        <discriminator javaType="string" column="gender">
+        <!--女生 resultType 指定封装的结果类型            -->
+            <case value="0" resultType="com.zf.bean.Employee">
+                <association property="department"
+                             select="com.zf.dao.DepartmentMapper.getDeptById" column="d_id"></association>
+            </case>
+            <case value="1" resultType="com.zf.bean.Employee">
+                <id column="id" property="id"/>
+                <result column="last_name" property="lastName"/>
+                <result column="last_name" property="email"/>
+                <result column="gender" property="gender"/>
+            </case>
+        </discriminator>
+    </resultMap>
 </mapper>
