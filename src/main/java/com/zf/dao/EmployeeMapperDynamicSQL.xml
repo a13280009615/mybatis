@@ -151,7 +151,7 @@
         </foreach>
 
     </insert>
-
+</mapper>
 
     <!--  2个内置参数
       _parameter : 代表 整个参数   如果是一个参数  _parameter 就是整个参数
@@ -163,6 +163,5 @@
 
 <!--    抽取 可重用的sql片段 方便后边引用  在使用的地方 使用  include标签 通过 refid 指定 抽取sql片段的id名称
 
--include 还可以 使用 property 自定义 sql标签内部就能使用自定义属性 ${取值}  #{} 不能使用->
-    <sql id=""></sql>
-</mapper>
+include 还可以 使用 property 自定义 sql标签内部就能使用自定义属性 ${取值}  #{} 不能使用
+    <sql id=""></sql> -->

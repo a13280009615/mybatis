@@ -1,12 +1,13 @@
 package com.zf.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author zhengfan
  * @create 2020-09-17 下午2:21
  */
-public class Department {
+public class Department  implements Serializable {
 
     private  Integer id;
 

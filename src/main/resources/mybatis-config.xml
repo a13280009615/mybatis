@@ -15,6 +15,7 @@
 <!--         开启 懒加载模式 在获取的时候才会 发送sql-->
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="cacheEnabled" value="true"/>
     </settings>
 
     <!--   typeAliases 给 javabean 起别名    别名不区分大小写-->

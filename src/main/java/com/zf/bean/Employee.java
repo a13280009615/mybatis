@@ -1,10 +1,13 @@
 package com.zf.bean;
 
+import java.io.Serializable;
+
 /**
  * @author zhengfan
  * @create 2020-09-15 23:31
  */
-public class Employee {
+public class Employee  implements Serializable {
+
 
     private  Integer id;
 
