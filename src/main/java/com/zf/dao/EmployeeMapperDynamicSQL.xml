@@ -6,10 +6,20 @@
 
 <!--    查询员工 查询那个员工-->
 
+<!--   if  test  =  判断表达式 使用的是 ognl 表达式
+ http://commons.apache.org/proper/commons-ognl/language-guide.html
+  从参数中 取值 进行判断
+   如果遇见特殊字符 要使用 字符实体
+
+   where  1 =1  为了 拼接 sql  如果首行 判断的条件不存在的时候 就会报错 在前面 加上 1=1 方便 and 拼接sql
+
+   mybatis 官方建议 使用 where标签  where 只会去掉第一个多出来的and
+   -->
     <select id="getEmpsByConditionIf" resultType="com.zf.bean.Employee">
 
      select * from tbl_employee
-     where
+
+    <where>
       <if test="id!=null">
           id =#{id}
       </if>
@@ -23,6 +33,136 @@
         <if test="gender==0 or gender ==1">
             and gender=#{gender}
         </if>
+    </where>
+    </select>
+
+
+
+<!--
+ if 中如果 and 或者or条件在   后边 需要使用trim标签
+ trim：
+ prefix=""  前缀 trim标签体中是整个字符串拼接后的结果  该属性 给整体拼接后的结果加个前缀
+ suffix=""  后缀
+ prefixOverrides=""  前缀覆盖 去掉整个字符串前面多余的字符
+ suffixOverrides=""  后缀覆盖 去掉整个字符串后面多余的字符
+
+-->
+    <select id="getEmpsByConditionTrim" resultType="com.zf.bean.Employee">
+
+        select * from tbl_employee
+
+        <trim prefix="where" suffixOverrides="and">
+            <if test="id!=null">
+                id =#{id}  and
+            </if>
+
+            <if test="lastName!=null and lastName !=''">
+                last_name like #{lastName} and
+            </if>
+            <if test="email!=null and email.trim() !=''">
+                 email= #{email} and
+            </if>
+            <if test="gender==0 or gender ==1">
+                 gender=#{gender}
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="getEmpsByConditionChoose" resultType="com.zf.bean.Employee">
+            <bind name="_lastName" value="'%'+ lastName+'%'"/>
+          select * from tbl_employee
+          <where>
+              <choose>
+                  <when test="id != null">
+                      id =#{id}
+                  </when>
+                  <when test="lastName != null">
+                      last_name like #{_lastName}
+                  </when>
+                  <when test="email != null">
+                      email =#{email}
+                  </when>
+                  <otherwise>
+                      gender =1
+                  </otherwise>
+              </choose>
+          </where>
+    </select>
+
+
+    <update id="updateEmp">
+         update tbl_employee
+
+          <set>
+        <if test="lastName != null">
+            last_name =#{lastName},
+        </if>
+        <if test="email != null">
+            email =#{email},
+        </if>
+        <if test="gender != null">
+            gender =#{gender},
+        </if>
+          </set>
+        where id = #{id}
+    </update>
+
+
+<!--    foreach
+ collection  指定要便利的 集合  mybaits  默认的把参数 封装到 map 中   map中List 的key  就是list
+ 想要指定 param 就必须使用 @param 注解
+ item 将当前遍历出来的元素 赋值到指定的变量
+ separator  每个元素之前的分隔符
+ open 遍历出所有的结果拼接一个开始的字符
+ close 遍历出所有的结果拼接一个结束的字符
+ index 索引 遍历list的时候 index 就是索引  item 就是当前值 遍历map的时候 index表示map中的key
+  item 就是map 的值
+  #{item 指定的变量  就能取出 当前遍历的索引的元素的值}
+ -->
+
+    <select id="getEmpsByConditionForEach" resultType="com.zf.bean.Employee">
+        select * from tbl_employee where id in 
+        
+        <foreach collection="list" item="item_id" separator="," open="(" close=")">
+            #{item_id}
+        </foreach>
 
     </select>
+
+   <!--   批量保存  第一种方式-->
+<!--    <insert id="addEmps">-->
+<!--        INSERT INTO tbl_employee(last_name,email,gender,d_id)-->
+<!--        VALUES-->
+<!--        <foreach collection="emps" item="emp" separator=",">-->
+<!--            (#{emp.lastName},#{emp.email},#{emp.gender},#{emp.department.id})-->
+<!--        </foreach>-->
+
+<!--    </insert>-->
+    <!--   批量保存  第二种方式  需要使用 mysql 的连接属性 让 mysql 支持 多条语句执行
+    比如 要在 mysql 的url  后边添加 allowMultiQueries=true 支持 多条语句执行-->
+
+    <insert id="addEmps">
+
+        <foreach collection="emps" item="emp" separator=";">
+            INSERT INTO tbl_employee(last_name,email,gender,d_id)
+            VALUES
+            (#{emp.lastName},#{emp.email},#{emp.gender},#{emp.department.id})
+        </foreach>
+
+    </insert>
+
+
+    <!--  2个内置参数
+      _parameter : 代表 整个参数   如果是一个参数  _parameter 就是整个参数
+       如果是多个参数 _parameter就是 代表 方法传参的所有参数的集合
+
+      _databaseId  如果配置了databaseIdProvider  代表就是当前数据库的别名
+      -->
+
+
+<!--    抽取 可重用的sql片段 方便后边引用  在使用的地方 使用  include标签 通过 refid 指定 抽取sql片段的id名称
+
+-include 还可以 使用 property 自定义 sql标签内部就能使用自定义属性 ${取值}  #{} 不能使用->
+    <sql id=""></sql>
 </mapper>

@@ -42,7 +42,7 @@
    lazy表示延迟加载-->
     <collection property="emps"
                 select="com.zf.dao.EmployeeMapperPlus.getEmpByDeptId" column="{id=id}"
-    fetchType="eager"></collection>
+                fetchType="eager"/>
 </resultMap>
 
     <select id="getDeptByIdStep" resultMap="depMap">
