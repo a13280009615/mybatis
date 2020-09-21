@@ -28,9 +28,9 @@ import java.io.InputStream;
  *     Executor  ParameterHandler  ResultSetHandler   StatementHandler
  *
  *   总结：
- *     1根据配置文件 初始化 出Configuration
- *     2 创建 uo一个defaultSqlSession对象
- *      它里面包含了Configuration 以及Executor
+ *     1根据配置文件(全局的  或者 mapper映射文件) 初始化 出Configuration
+ *     2 创建 一个defaultSqlSession对象
+ *      它里面包含了Configuration 以及Executor(根据全局配置文件配置的 defaultExecutorType)
  *     3 DefaultSqlSession.getMapper() 拿到接口对应的代理对象
  *     4 代理对象里面有DefaultSqlSession
  *     5  执行增删改查
@@ -38,7 +38,7 @@ import java.io.InputStream;
  *           在执行过程中 会创建StatementHandler 同时也会创建出 ParameterHandler ResultSetHandler
  *           调用StatementHandler 的预编译参数 以及设置参数的值
  *           在调用StatementHandler的增删改查方法
- *           使用ResultSetHandler 封装结构
+ *           使用ResultSetHandler 封装结果
  *     注意：
  *       四大对象每个创建的时候 都有一个 interceptorChain
  *

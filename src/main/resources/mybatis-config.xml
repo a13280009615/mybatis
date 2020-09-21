@@ -40,6 +40,9 @@
          自定义需要实现DatasourceFactory接口
   -->
 
+    <plugins>
+        <plugin interceptor="com.zf.plugin.FirstPlugin"></plugin>
+    </plugins>
 
     <environments default="development">
         <environment id="development">
